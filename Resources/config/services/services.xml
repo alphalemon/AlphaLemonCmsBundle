@@ -45,7 +45,7 @@
         </service>
 
         <service id="alpha_lemon_cms.factory_repository" class="%alpha_lemon_cms.factory_repository.class%">
-            <argument type="string">%alpha_lemon_cms.orm%</argument>
+            <argument type="service" id="service_container" />
         </service>
 
         <service id="alpha_lemon_cms.block_manager_factory" class="%alpha_lemon_cms.block_manager_factory.class%">

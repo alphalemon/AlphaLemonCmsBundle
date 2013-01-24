@@ -43,7 +43,7 @@ class AlphaLemonCmsExtension extends Extension
         $processor = new Processor();
         $configuration = new Configuration();
         $config = $processor->processConfiguration($configuration, $configs);
-
+        
         $container->setParameter('alpha_lemon_cms.orm', $config['orm']);
         $container->setParameter('alpha_lemon_cms.skin', $config['skin']);
         $container->setParameter('alpha_lemon_cms.web_folder', $config['web_folder_dir']);

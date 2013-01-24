@@ -62,6 +62,7 @@ class AlResourcesLocker
      */
     public function lockResource($userId, $resourceName)
     {
+        $time = time();
         $resource = $this->lockedResourceRepository->fromResourceNameByUser($userId, $resourceName);
         if (null === $resource) {
             if ( ! $this->isResourceFree($resourceName)) {
@@ -73,13 +74,13 @@ class AlResourcesLocker
             $values = array(
                 'ResourceName' => $resourceName,
                 'UserId' => $userId,
-                'CreatedAt' => time(),
-                'UpdatedAt' => time(),
+                'CreatedAt' => $time,
+                'UpdatedAt' => $time,
             );
         }
         else {
             $values = array(
-                'UpdatedAt' => time(),
+                'UpdatedAt' => $time,
             );
         }
             

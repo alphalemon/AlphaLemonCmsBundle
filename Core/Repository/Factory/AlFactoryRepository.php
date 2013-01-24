@@ -17,6 +17,7 @@
 
 namespace AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Factory;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Factory\Exception\RepositoryNotFoundException;
 
 /**
@@ -27,7 +28,7 @@ use AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Factory\Exception\RepositoryN
  */
 class AlFactoryRepository implements AlFactoryRepositoryInterface
 {
-    private $orm = null;
+    private $container = null;
     private $namespace = 'AlphaLemon\AlphaLemonCmsBundle\Core\Repository';
 
     /**
@@ -35,9 +36,9 @@ class AlFactoryRepository implements AlFactoryRepositoryInterface
      *
      * @param string $orm
      */
-    public function __construct($orm)
+    public function __construct(ContainerInterface $container)
     {
-        $this->orm = ucfirst($orm);
+        $this->container = $container;
     }
 
     /**
@@ -45,16 +46,19 @@ class AlFactoryRepository implements AlFactoryRepositoryInterface
      */
     public function createRepository($blockType, $namespace = null)
     {
+        $orm = ucfirst($this->container->getParameter('alpha_lemon_cms.orm'));
         $namespace = (null === $namespace) ?  $this->namespace : $namespace;
         $blockType = ucfirst($blockType);
-        $class = sprintf('%s\%s\%sRepository%s', $namespace, $this->orm, $blockType, $this->orm);
+        $class = sprintf('%s\%s\%sRepository%s', $namespace, $orm, $blockType, $orm);
         if (!class_exists($class)) {
-            $class = sprintf('%s\%s\Al%sRepository%s', $namespace, $this->orm, $blockType, $this->orm);
+            $class = sprintf('%s\%s\Al%sRepository%s', $namespace, $orm, $blockType, $orm);
             if (!class_exists($class)) {
                 throw new RepositoryNotFoundException(sprintf('The repository for the "%s" block type at the namespace "%s" cannot be created', $blockType, $namespace));
             }
         }
-
-        return new $class();
+        
+        $argument = ($orm == 'Doctrine') ? $this->container->get('doctrine')->getManager() : null;
+        
+        return new $class($argument);
     }
 }
