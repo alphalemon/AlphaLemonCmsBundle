@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AlSeo" table="al_seo">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="languageId" type="integer" column="language_id" nullable="false"/>
+    <field name="pageId" type="integer" column="page_id" nullable="false"/>
+    <field name="permalink" type="string" column="permalink" length="255" nullable="true"/>
+    <field name="metaTitle" type="text" column="meta_title" nullable="false"/>
+    <field name="metaDescription" type="text" column="meta_description" nullable="false"/>
+    <field name="metaKeywords" type="text" column="meta_keywords" nullable="false"/>
+    <field name="metaTitleFrontend" type="text" column="meta_title_frontend" nullable="true"/>
+    <field name="metaDescriptionFrontend" type="text" column="meta_description_frontend" nullable="true"/>
+    <field name="metaKeywordsFrontend" type="text" column="meta_keywords_frontend" nullable="true"/>
+    <field name="sitemapChangefreq" type="text" column="sitemap_changefreq" nullable="false"/>
+    <field name="sitemapLastmod" type="text" column="sitemap_lastmod" nullable="false"/>
+    <field name="sitemapPriority" type="text" column="sitemap_priority" nullable="false"/>
+    <field name="toDelete" type="integer" column="to_delete" nullable="false"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+  </entity>
+</doctrine-mapping>

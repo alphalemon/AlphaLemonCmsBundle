@@ -26,22 +26,30 @@ use Doctrine\DBAL\Connection;
  *
  *  @author alphalemon <webmaster@alphalemon.com>
  */
-class AlDoctrineOrm implements OrmInterface
+abstract class AlDoctrineOrm implements OrmInterface
 {
+    protected $doctrine;
     protected $orm;
     protected $affectedRecords = null;    
     protected static $connection = null;
 
     /**
+     * {@inheritdoc}
+     */
+    //abstract protected function getRepositoryName();
+            
+    /**
      * Constructor
      *
      * @param \DoctrinePDO $connection
      */
-    public function __construct(ObjectManager $orm)
+    public function __construct(\Doctrine\Bundle\DoctrineBundle\Registry $doctrine)
     {
-        $this->orm = $orm;
+        $this->doctrine = $doctrine;
+        $this->orm = $doctrine->getManager();
+        //$this->repository = $this->doctrine->getRepository($this->getRepositoryName());
         
-        self::$connection = $orm->getConnection();
+        self::$connection = $this->orm->getConnection();
     }
 
     /**
@@ -116,28 +124,10 @@ class AlDoctrineOrm implements OrmInterface
             }
             
             $this->startTransaction();
-            /*
-            foreach ($values as $key => $value) {
-                $method = 'set' . $key;
-                $this->modelObject->$method($value);
-            }var_dump($this->modelObject);exit;
-            
-            if (array_key_exists($keys[0], $arr)) $this->setResourceName($arr[$keys[0]]);
-        if (array_key_exists($keys[1], $arr)) $this->setUserId($arr[$keys[1]]);
-        if (array_key_exists($keys[2], $arr)) $this->setCreatedAt($arr[$keys[2]]);
-        if (array_key_exists($keys[3], $arr)) $this->setUpdatedAt($arr[$keys[3]]);*/
-            //echo new \DateTime("@" . $values['CreatedAt']);return;
-            
-            
-            
-            $this->modelObject->setResourceName($values['ResourceName']);
-            $this->modelObject->setUserId($values['UserId']);
-            $this->modelObject->setCreatedAt($values['CreatedAt']);
-            $this->modelObject->setUpdatedAt($values['UpdatedAt']);
-
+            $this->bindFromArray($values);
             $this->orm->persist($this->modelObject);            
             $this->affectedRecords = $this->orm->flush();
-$success = true;
+            $success = true;
             /*if ($this->affectedRecords == 0) {
                 $success = ($this->modelObject->isModified()) ? false : null;
             } else {
@@ -183,5 +173,22 @@ $success = true;
         $statement = self::$connection->prepare($query);
 
         return $statement->execute();
+    }
+    
+    /**
+     * Removed the current resource
+     * 
+     * Compatibility with propel query delete method
+     * 
+     * @param type $lockedResource
+     */
+    protected function remove($entity)
+    {
+        if (null === $entity) {
+            return ;
+        }
+        
+        $this->orm->remove($entity);
+        $this->orm->flush();
     }
 }

@@ -107,7 +107,7 @@ class AlLockedResourceRepositoryPropel extends Base\AlPropelRepository implement
     {
         return AlLockedResourceQuery::create()
                                     ->_if($userId)
-                                        ->filterBySlotName($userId)
+                                        ->filterByUser($userId)
                                     ->_endif()
                                     ->find();
     }

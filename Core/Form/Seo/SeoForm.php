@@ -20,7 +20,7 @@ namespace AlphaLemon\AlphaLemonCmsBundle\Core\Form\Seo;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use AlphaLemon\AlphaLemonCmsBundle\Core\Form\ModelChoiceValues\ChoiceValues;
-use AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Propel\AlLanguageRepositoryPropel;
+use AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Repository\LanguageRepositoryInterface;
 
 /**
  * Defines the page attributes form
@@ -32,13 +32,13 @@ use AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Propel\AlLanguageRepositoryPr
 class SeoForm extends AbstractType
 {
     private $languageRepository;
-
+    
     /**
      * Constructor
      * 
-     * @param \AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Propel\AlLanguageRepositoryPropel $languageRepository
+     * @param \AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Repository\LanguageRepositoryInterface $languageRepository
      */
-    public function __construct(AlLanguageRepositoryPropel $languageRepository)
+    public function __construct(LanguageRepositoryInterface $languageRepository)
     {
         $this->languageRepository = $languageRepository;
     }

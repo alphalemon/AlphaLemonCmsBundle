@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AlPage" table="al_page">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="pageName" type="string" column="page_name" length="255" nullable="false"/>
+    <field name="templateName" type="string" column="template_name" length="255" nullable="true"/>
+    <field name="isHome" type="integer" column="is_home" nullable="false"/>
+    <field name="isPublished" type="integer" column="is_published" nullable="false"/>
+    <field name="toDelete" type="integer" column="to_delete" nullable="false"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AlBlock" table="al_block">
+    <id name="id" type="integer" column="id">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="pageId" type="integer" column="page_id" nullable="false"/>
+    <field name="languageId" type="integer" column="language_id" nullable="false"/>
+    <field name="slotName" type="string" column="slot_name" length="255" nullable="false"/>
+    <field name="className" type="string" column="class_name" length="255" nullable="false"/>
+    <field name="htmlContent" type="text" column="html_content" nullable="false"/>
+    <field name="internalJavascript" type="text" column="internal_javascript" nullable="false"/>
+    <field name="externalJavascript" type="text" column="external_javascript" nullable="false"/>
+    <field name="internalStylesheet" type="text" column="internal_stylesheet" nullable="false"/>
+    <field name="externalStylesheet" type="text" column="external_stylesheet" nullable="false"/>
+    <field name="toDelete" type="integer" column="to_delete" nullable="false"/>
+    <field name="contentPosition" type="integer" column="content_position" nullable="false"/>
+    <field name="createdAt" type="datetime" column="created_at" nullable="true"/>
+  </entity>
+</doctrine-mapping>

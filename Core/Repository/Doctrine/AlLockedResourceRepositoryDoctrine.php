@@ -29,6 +29,29 @@ use AlphaLemon\AlphaLemonCmsBundle\Core\Exception\Content\General\InvalidParamet
  */
 class AlLockedResourceRepositoryDoctrine extends Base\AlDoctrineRepository implements LockedResourceRepositoryInterface
 {
+    public function __construct(\Doctrine\Bundle\DoctrineBundle\Registry $doctrine)
+    {
+        parent::__construct($doctrine);
+        
+        $this->repository = $this->doctrine->getRepository('AlphaLemonCmsBundle:AlLockedResource');
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function bindFromArray(array $values)
+    {
+        $this->modelObject->setResourceName($values['ResourceName']);
+        $this->modelObject->setUserId($values['UserId']);
+    }
+    
+    /**
+     * {@inheritdoc}
+     */
+    protected function getRepositoryName()
+    {
+        return 'AlphaLemonCmsBundle:AlLockedResource';
+    }
+    
     /**
      * {@inheritdoc}
      */
@@ -54,9 +77,8 @@ class AlLockedResourceRepositoryDoctrine extends Base\AlDoctrineRepository imple
      */
     public function fromResourceName($resource)
     {
-       return AlLockedResourceQuery::create()
-                              ->filterByResourceName($resource)
-                              ->findOne();
+        return $this->repository
+            ->findOneBy(array("resourceName" => $resource));
     }
     
     /**
@@ -64,10 +86,8 @@ class AlLockedResourceRepositoryDoctrine extends Base\AlDoctrineRepository imple
      */
     public function fromResourceNameByUser($userId, $resource)
     {
-        return AlLockedResourceQuery::create()
-                               ->filterByUserId($userId)
-                               ->filterByResourceName($resource)
-                               ->findOne();
+        return $this->repository
+            ->findOneBy(array("userId" => $userId, "resourceName" => $resource));
     }
     
     /**
@@ -75,9 +95,9 @@ class AlLockedResourceRepositoryDoctrine extends Base\AlDoctrineRepository imple
      */
     public function freeLockedResource($resource)
     {
-        return AlLockedResourceQuery::create()
-                                    ->filterByResourceName($resource)
-                                    ->delete();
+        $lockedResource = $this->fromResourceName($resource);
+        
+        $this->remove($lockedResource);
     }
     
     /**
@@ -85,9 +105,17 @@ class AlLockedResourceRepositoryDoctrine extends Base\AlDoctrineRepository imple
      */
     public function removeExpiredResources($expiredTime)
     {
-        return AlLockedResourceQuery::create('a')
-                                    ->where('a.UpdatedAt <= ?', $expiredTime)
-                                    ->delete();
+        $resources = $this->repository
+            ->createQueryBuilder('a')
+            ->where('a.updatedAt <= :expiredTime')
+            ->setParameter('expiredTime', new \DateTime('@' . $expiredTime))
+            ->getQuery()
+            ->getResult()
+        ;
+        
+        foreach($resources as $resource) {
+            $this->remove($resource);
+        }
     }
     
     /**
@@ -95,9 +123,10 @@ class AlLockedResourceRepositoryDoctrine extends Base\AlDoctrineRepository imple
      */
     public function freeUserResource($userId)
     {
-        return AlLockedResourceQuery::create()
-                                    ->filterByUserId($userId)
-                                    ->delete();
+        $lockedResource = $this->repository
+            ->findOneBy(array("userId" => $userId));
+        
+        $this->remove($lockedResource);
     }
     
     /**
@@ -105,10 +134,23 @@ class AlLockedResourceRepositoryDoctrine extends Base\AlDoctrineRepository imple
      */
     public function fetchResources($userId = null)
     {
-        return AlLockedResourceQuery::create()
-                                    ->_if($userId)
-                                        ->filterBySlotName($userId)
-                                    ->_endif()
-                                    ->find();
+        $query = $this->repository
+            ->createQueryBuilder('a');
+        
+        if (null !== $userId) {
+            $query
+                ->where('a.userId <= :userId')
+                ->setParameter('userId', $userId)
+            ;
+        }
+        
+        $resources = $query
+            ->getQuery()
+            ->getResult()
+        ;
+        
+        return $resources;
     }
+    
+    
 }

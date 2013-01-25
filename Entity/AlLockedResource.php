@@ -1,130 +1,125 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace AlphaLemon\AlphaLemonCmsBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
-* @ORM\Entity
-* @ORM\Table(name="al_locked_resource")
-*/
+ * AlLockedResource
+ *
+ * @ORM\Table(name="al_locked_resource")
+ * @ORM\Entity
+ */
 class AlLockedResource
 {
     /**
-     * @ORM\Id
-     * @ORM\Column(type="string", length=32)
-     */
-    protected $resource_name;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    protected $user_id;
-
-    /**
-     * @ORM\Column(type="time")
-     */
-    protected $created_at;
-
-    /**
-     * @ORM\Column(type="time")
-     */
-    protected $updated_at;
-
-    /**
-     * Set resource_name
+     * @var string
      *
-     * @param string $resourceName
-     * @return AlLockedResource
+     * @ORM\Column(name="resource_name", type="string", length=32, nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    public function setResourceName($resourceName)
-    {
-        $this->resource_name = $resourceName;
-    
-        return $this;
-    }
+    private $resourceName;
 
     /**
-     * Get resource_name
+     * @var integer
+     *
+     * @ORM\Column(name="user_id", type="integer", nullable=false)
+     */
+    private $userId;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
+     */
+    private $updatedAt;
+
+
+
+    /**
+     * Get resourceName
      *
      * @return string 
      */
     public function getResourceName()
     {
-        return $this->resource_name;
+        return $this->resourceName;
     }
 
     /**
-     * Set user_id
+     * Set userId
      *
      * @param integer $userId
      * @return AlLockedResource
      */
     public function setUserId($userId)
     {
-        $this->user_id = $userId;
+        $this->userId = $userId;
     
         return $this;
     }
 
     /**
-     * Get user_id
+     * Get userId
      *
      * @return integer 
      */
     public function getUserId()
     {
-        return $this->user_id;
+        return $this->userId;
     }
 
     /**
-     * Set created_at
+     * Set createdAt
      *
      * @param \DateTime $createdAt
      * @return AlLockedResource
      */
     public function setCreatedAt($createdAt)
     {
-        $this->created_at = $createdAt;
+        $this->createdAt = $createdAt;
     
         return $this;
     }
 
     /**
-     * Get created_at
+     * Get createdAt
      *
      * @return \DateTime 
      */
     public function getCreatedAt()
     {
-        return $this->created_at;
+        return $this->createdAt;
     }
 
     /**
-     * Set updated_at
+     * Set updatedAt
      *
      * @param \DateTime $updatedAt
      * @return AlLockedResource
      */
     public function setUpdatedAt($updatedAt)
     {
-        $this->updated_at = $updatedAt;
+        $this->updatedAt = $updatedAt;
     
         return $this;
     }
 
     /**
-     * Get updated_at
+     * Get updatedAt
      *
      * @return \DateTime 
      */
     public function getUpdatedAt()
     {
-        return $this->updated_at;
+        return $this->updatedAt;
     }
 }

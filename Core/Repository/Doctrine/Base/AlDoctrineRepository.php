@@ -32,7 +32,7 @@ abstract class AlDoctrineRepository extends AlDoctrineOrm implements RepositoryI
     /**
      * {@inheritdoc}
      *
-     * @param  BaseObject                                                                     $object
+     * @param  BaseObject $object
      * @return \AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Doctrine\Base\AlDoctrineRepository
      * @throws General\InvalidParameterTypeException
      */

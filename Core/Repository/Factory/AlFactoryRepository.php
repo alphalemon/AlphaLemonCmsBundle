@@ -57,7 +57,7 @@ class AlFactoryRepository implements AlFactoryRepositoryInterface
             }
         }
         
-        $argument = ($orm == 'Doctrine') ? $this->container->get('doctrine')->getManager() : null;
+        $argument = ($orm == 'Doctrine') ? $this->container->get('doctrine') : null;
         
         return new $class($argument);
     }

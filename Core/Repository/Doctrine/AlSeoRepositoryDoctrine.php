@@ -17,9 +17,7 @@
 
 namespace AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Doctrine;
 
-use AlphaLemon\AlphaLemonCmsBundle\Core\Event\Query\Seo;
-use AlphaLemon\AlphaLemonCmsBundle\Model\AlSeo;
-use AlphaLemon\AlphaLemonCmsBundle\Model\AlSeoQuery;
+use AlphaLemon\AlphaLemonCmsBundle\Entity\AlSeo;
 use AlphaLemon\AlphaLemonCmsBundle\Core\Repository\Repository\SeoRepositoryInterface;
 use AlphaLemon\AlphaLemonCmsBundle\Core\Exception\Content\General\InvalidParameterTypeException;
 
@@ -30,12 +28,27 @@ use AlphaLemon\AlphaLemonCmsBundle\Core\Exception\Content\General\InvalidParamet
  */
 class AlSeoRepositoryDoctrine extends Base\AlDoctrineRepository implements SeoRepositoryInterface
 {
+    public function __construct(\Doctrine\Bundle\DoctrineBundle\Registry $doctrine)
+    {
+        parent::__construct($doctrine);
+        
+        $this->repository = $this->doctrine->getRepository('AlphaLemonCmsBundle:AlSeo');
+    }
+    /**
+     * {@inheritdoc}
+     */
+    protected function bindFromArray(array $values)
+    {
+        $this->modelObject->setResourceName($values['ResourceName']);
+        $this->modelObject->setUserId($values['UserId']);
+    }
+    
     /**
      * {@inheritdoc}
      */
     public function getRepositoryObjectClassName()
     {
-        return '\AlphaLemon\AlphaLemonCmsBundle\Model\AlSeo';
+        return '\AlphaLemon\AlphaLemonCmsBundle\Entity\AlSeo';
     }
 
     /**
@@ -55,7 +68,10 @@ class AlSeoRepositoryDoctrine extends Base\AlDoctrineRepository implements SeoRe
      */
     public function fromPK($id)
     {
-        return AlSeoQuery::create()->findPk($id);
+        return $this->repository
+            ->findOneBy(array("id" => $id));
+        
+        //AlSeoQuery::create()->findPk($id);
     }
 
     /**
@@ -63,18 +79,21 @@ class AlSeoRepositoryDoctrine extends Base\AlDoctrineRepository implements SeoRe
      */
     public function fromPageAndLanguage($languageId, $pageId)
     {
+        return $this->repository
+            ->findOneBy(array("pageId" => $pageId, "languageId" => $languageId, "toDelete" => 0));
+        /*
         return AlSeoQuery::create()
                     ->filterByPageId($pageId)
                     ->filterByLanguageId($languageId)
                     ->filterByToDelete(0)
-                    ->findOne();
+                    ->findOne();*/
     }
 
     /**
      * {@inheritdoc}
      */
     public function fromPermalink($permalink)
-    {
+    {//echo "fromPermalink";exit;
         if (null === $permalink) {
             return null;
         }
@@ -82,10 +101,14 @@ class AlSeoRepositoryDoctrine extends Base\AlDoctrineRepository implements SeoRe
         if (!is_string($permalink)) {
             throw new \InvalidArgumentException('The permalink must be a string. The seo attribute cannot be retrieved');
         }
+        
+        return $this->repository
+            ->findOneBy(array("permalink" => $permalink, "toDelete" => 0));
+        
 
         return AlSeoQuery::create('a')
-                    ->joinWith('a.AlPage')
-                    ->joinWith('a.AlLanguage')
+                    //->joinWith('a.AlPage')
+                    //->joinWith('a.AlLanguage')
                     ->filterByPermalink($permalink)
                     ->filterByToDelete(0)
                     ->findOne();
@@ -96,6 +119,9 @@ class AlSeoRepositoryDoctrine extends Base\AlDoctrineRepository implements SeoRe
      */
     public function fromPageId($pageId)
     {
+        return $this->repository
+            ->findOneBy(array("pageId" => $pageId, "toDelete" => 0));
+        
         return AlSeoQuery::create()
                     ->filterByPageId($pageId)
                     ->filterByToDelete(0)
@@ -107,6 +133,9 @@ class AlSeoRepositoryDoctrine extends Base\AlDoctrineRepository implements SeoRe
      */
     public function fromLanguageId($languageId)
     {
+        return $this->repository
+            ->findOneBy(array("languageId" => $languageId, "toDelete" => 0));
+        
         return AlSeoQuery::create()
                     ->filterByLanguageId($languageId)
                     ->filterByToDelete(0)
@@ -117,7 +146,7 @@ class AlSeoRepositoryDoctrine extends Base\AlDoctrineRepository implements SeoRe
      * {@inheritdoc}
      */
     public function fromPageIdWithLanguages($pageId)
-    {
+    {echo "fromPageIdWithLanguages";exit;
         return AlSeoQuery::create()
                     ->joinAlLanguage()
                     ->filterByPageId($pageId)
@@ -130,7 +159,7 @@ class AlSeoRepositoryDoctrine extends Base\AlDoctrineRepository implements SeoRe
      * {@inheritdoc}
      */
     public function fetchSeoAttributesWithPagesAndLanguages()
-    {
+    {echo "fetchSeoAttributesWithPagesAndLanguages";exit;
         return AlSeoQuery::create('a')
                     ->joinWith('a.AlPage')
                     ->joinWith('a.AlLanguage')
@@ -144,7 +173,7 @@ class AlSeoRepositoryDoctrine extends Base\AlDoctrineRepository implements SeoRe
      * {@inheritdoc}
      */
     public function fromLanguageName($languageName)
-    {
+    {echo "fromLanguageName";exit;
         return AlSeoQuery::create('a')
                     ->joinWith('a.AlLanguage')
                     ->where('AlLanguage.languageName = ?', $languageName)
