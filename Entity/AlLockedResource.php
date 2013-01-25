@@ -17,7 +17,6 @@ class AlLockedResource
      *
      * @ORM\Column(name="resource_name", type="string", length=32, nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $resourceName;
 
@@ -42,7 +41,17 @@ class AlLockedResource
      */
     private $updatedAt;
 
-
+    /**
+     * Set resourceName
+     *
+     * @return AlLockedResource 
+     */
+    public function setResourceName($resourceName)
+    {
+        $this->resourceName = $resourceName;
+    
+        return $this;
+    }
 
     /**
      * Get resourceName

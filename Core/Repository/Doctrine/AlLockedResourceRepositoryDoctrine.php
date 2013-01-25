@@ -40,8 +40,8 @@ class AlLockedResourceRepositoryDoctrine extends Base\AlDoctrineRepository imple
      */
     protected function bindFromArray(array $values)
     {
-        $this->modelObject->setResourceName($values['ResourceName']);
-        $this->modelObject->setUserId($values['UserId']);
+        if ( ! empty($values['ResourceName'])) $this->modelObject->setResourceName($values['ResourceName']);
+        if ( ! empty($values['UserId'])) $this->modelObject->setUserId($values['UserId']);
     }
     
     /**
